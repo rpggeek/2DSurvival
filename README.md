@@ -1,2 +1,6 @@
 # 2DSurvival
-I'll write later.
+The first things that game need are:
+
+* HP System
+* Stamina System
+* Inventory System
