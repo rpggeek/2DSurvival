@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Script\CharacterController.cs" />
-     <Compile Include="Assets\Script\scrp.cs" />
+     <Compile Include="Assets\Script\Clouds.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/UNİTY/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

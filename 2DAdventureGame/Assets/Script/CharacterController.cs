@@ -11,6 +11,8 @@ public class CharacterController : MonoBehaviour {
 	public bool sag_dondu = true;
 	private int objecttimer = 2;
 	public List<GameObject> hearth = new List<GameObject> ();
+	private GameObject Clouds;
+	private GameObject SubClouds;
 
 	public GameObject Cam;
 	void Start () {
@@ -20,7 +22,8 @@ public class CharacterController : MonoBehaviour {
 		hearth.Add(GameObject.Find("Hearth1"));
 		hearth.Add(GameObject.Find("Hearth2"));
 		hearth.Add(GameObject.Find("Hearth3"));
-
+		Clouds = GameObject.Find ("Clouds");
+		SubClouds = GameObject.Find ("SubClouds");
 	}
 	// Update is called once per frame
 	void Update () {
@@ -48,12 +51,16 @@ public class CharacterController : MonoBehaviour {
 		float distance = Vector2.Distance (Cam.transform.position, transform.position);
 		Vector2 direction = transform.position - Cam.transform.position;
 	
-		if (distance > 10 && direction.x > 0) {
+		if (distance > 6 && direction.x > 0) {
 			Cam.transform.Translate (Vector2.right*Time.deltaTime*3.5F);
+			Clouds.transform.Translate (Vector2.right * Time.deltaTime*2);
+			SubClouds.transform.Translate (Vector2.right * Time.deltaTime*1.8F);
 			//Cam.transform.position += (transform.position - Cam.transform.position).normalized * Time.deltaTime * 3;
 		}
-		if (distance > 10 && direction.x < 0) {
+		if (distance > 6 && direction.x < 0) {
 			Cam.transform.Translate (Vector2.left*Time.deltaTime*3.5F);
+			Clouds.transform.Translate (Vector2.left * Time.deltaTime*2);
+			SubClouds.transform.Translate (Vector2.left * Time.deltaTime*1.8F);
 			//Cam.transform.position += (transform.position - Cam.transform.position).normalized * Time.deltaTime * 3;
 		}
 	}
