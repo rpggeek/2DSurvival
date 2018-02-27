@@ -8,5 +8,7 @@ The first things that game need are:
 The changes that changed:
 
 -> Added parallax system that make separate clouds each other.
+
 -> Added oksygen tank graphics system.
+
 -> Added breath animation.
