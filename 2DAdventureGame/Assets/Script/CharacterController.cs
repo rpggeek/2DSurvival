@@ -3,74 +3,100 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour {
-
-	// Use this for initialization
-	public Rigidbody2D rigid;
-	public Rigidbody2D rigidd;
-	public bool yürüdü = false;
-	public bool sag_dondu = true;
-	private int objecttimer = 2;
-	public List<GameObject> hearth = new List<GameObject> ();
+	//****************************************************************************
 	private GameObject Clouds;
 	private GameObject SubClouds;
+	private GameObject MainCamera;
+	private GameObject OksygenParticleSystem;
+	private GameObject OksygenTank;
+	//****************************************************************************
+	public Rigidbody2D cameraRigidBody;
+	public Rigidbody2D rigidd;
+	//****************************************************************************
+	public bool isWalking = false;
+	public bool isTurnRight = true;
+	//****************************************************************************
+	private int heartCounter = 2;
+	//****************************************************************************
+	public List<GameObject> Hearth = new List<GameObject> ();
+	//****************************************************************************
 
-	public GameObject Cam;
 	void Start () {
-		Cam = GameObject.Find("Main Camera");
-		rigidd = Cam.GetComponent<Rigidbody2D> ();
-		rigid = GetComponent<Rigidbody2D> ();
-		hearth.Add(GameObject.Find("Hearth1"));
-		hearth.Add(GameObject.Find("Hearth2"));
-		hearth.Add(GameObject.Find("Hearth3"));
+		MainCamera = GameObject.Find("Main Camera");
+		cameraRigidBody = MainCamera.GetComponent<Rigidbody2D> ();
+		cameraRigidBody = GetComponent<Rigidbody2D> ();
+		Hearth.Add(GameObject.Find("Hearth1"));
+		Hearth.Add(GameObject.Find("Hearth2"));
+		Hearth.Add(GameObject.Find("Hearth3"));
 		Clouds = GameObject.Find ("Clouds");
 		SubClouds = GameObject.Find ("SubClouds");
+		OksygenParticleSystem = GameObject.Find ("OksygenSystem");
+		OksygenTank = GameObject.Find ("Oksygen");
 	}
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.GetKeyDown (KeyCode.D)) {
-			if (sag_dondu == false) {
+		MovementSystem();
+		OksygenSystem ();
+		CameraSystem_that_FollowPlayer ();
+	}
+
+	//------------------------------------------------------------------------------------------------------
+	void MovementSystem(){
+		if (Input.GetKey (KeyCode.D)) {
+			if (isTurnRight == false) {
 				transform.Rotate (0, 180, 0);
-				sag_dondu = true;
+				isTurnRight = true;
 			}
-			yürüdü = true;
-			rigid.velocity = new Vector3 (5, 0, 0);
+			isWalking = true;
+			cameraRigidBody.transform.Translate (Vector2.right * Time.deltaTime*6);
 		}else {
-			yürüdü = false;
+			isWalking = false;
 		}
-		if (Input.GetKeyDown (KeyCode.A)){
-			if (sag_dondu) {
+
+
+		if (Input.GetKey (KeyCode.A)){
+			if (isTurnRight) {
 				transform.Rotate (0, 180, 0);
-				sag_dondu = false;
+				isTurnRight = false;
 			}
-			yürüdü = true;
-			rigid.velocity = new Vector3 (-5, 0, 0);
+			isWalking = true;
+			cameraRigidBody.transform.Translate (-Vector2.left * Time.deltaTime*6);
 		} else {
-			yürüdü = false;
+			isWalking = false;
 		}
-		float distance = Vector2.Distance (Cam.transform.position, transform.position);
-		Vector2 direction = transform.position - Cam.transform.position;
-	
+	}
+	//------------------------------------------------------------------------------------------------------
+	void OksygenSystem (){
+		if(OksygenParticleSystem.GetComponent<ParticleSystem>().time%10 < 0.1F){
+			OksygenParticleSystem.transform.position = OksygenTank.transform.position;
+		}
+	}
+
+	//------------------------------------------------------------------------------------------------------
+
+	void CameraSystem_that_FollowPlayer(){
+		float distance = Vector2.Distance (MainCamera.transform.position, transform.position);
+		Vector2 direction = transform.position - MainCamera.transform.position;
+
 		if (distance > 6 && direction.x > 0) {
-			Cam.transform.Translate (Vector2.right*Time.deltaTime*3.5F);
+			MainCamera.transform.Translate (Vector2.right*Time.deltaTime*3.5F);
 			Clouds.transform.Translate (Vector2.right * Time.deltaTime*2);
 			SubClouds.transform.Translate (Vector2.right * Time.deltaTime*1.8F);
-			//Cam.transform.position += (transform.position - Cam.transform.position).normalized * Time.deltaTime * 3;
 		}
 		if (distance > 6 && direction.x < 0) {
-			Cam.transform.Translate (Vector2.left*Time.deltaTime*3.5F);
+			MainCamera.transform.Translate (Vector2.left*Time.deltaTime*3.5F);
 			Clouds.transform.Translate (Vector2.left * Time.deltaTime*2);
 			SubClouds.transform.Translate (Vector2.left * Time.deltaTime*1.8F);
-			//Cam.transform.position += (transform.position - Cam.transform.position).normalized * Time.deltaTime * 3;
 		}
 	}
-
-	void OnCollisionEnter2D(Collision2D coll){
-		if (coll.gameObject.name == "blade" || coll.gameObject.name == "blade_2") {
-			Destroy (hearth[objecttimer]);
-			objecttimer--;
+	//------------------------------------------------------------------------------------------------------
+	void OnCollisionEnter2D(Collision2D collision){
+		if (collision.gameObject.name == "blade" || collision.gameObject.name == "blade_2") {
+			Destroy (Hearth[heartCounter]);
+			heartCounter--;
 		}
 	}
-
+	//------------------------------------------------------------------------------------------------------
 	}
 
